@@ -2,7 +2,7 @@
 NeoPixel library helper functions for Esp32.
 
 A BIG thanks to Andreas Merkle for the investigation and implementation of
-a workaround to the GCC bug that drops method attributes from template methods 
+a workaround to the GCC bug that drops method attributes from template methods
 
 Written by Michael C. Miller.
 
@@ -49,7 +49,7 @@ extern "C"
 }
 
 #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(4, 3, 0)
-#define NEOPIXELBUS_RMT_INT_FLAGS (ESP_INTR_FLAG_LOWMED)
+#define NEOPIXELBUS_RMT_INT_FLAGS (ESP_INTR_FLAG_LOWMED | ESP_INTR_FLAG_IRAM)
 #else
 #define NEOPIXELBUS_RMT_INT_FLAGS (ESP_INTR_FLAG_IRAM | ESP_INTR_FLAG_LEVEL1)
 #endif
@@ -60,7 +60,7 @@ public:
     // ClkDiv of 2 provides for good resolution and plenty of reset resolution; but
     // a ClkDiv of 1 will provide enough space for the longest reset and does show
     // little better pulse accuracy
-    const static uint8_t RmtClockDivider = 2; 
+    const static uint8_t RmtClockDivider = 2;
 
     inline constexpr static uint32_t FromNs(uint32_t ns)
     {
@@ -71,18 +71,17 @@ protected:
     const static uint32_t RmtCpu = 80000000L; // 80 mhz RMT clock
     const static uint32_t NsPerSecond = 1000000000L;
     const static uint32_t RmtTicksPerSecond = (RmtCpu / RmtClockDivider);
-    const static uint32_t NsPerRmtTick = (NsPerSecond / RmtTicksPerSecond); // about 25 
+    const static uint32_t NsPerRmtTick = (NsPerSecond / RmtTicksPerSecond); // about 25
 
-    static void IRAM_ATTR _translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num,
-        const uint32_t rmtBit0,
-        const uint32_t rmtBit1,
-        const uint16_t rmtDurationReset);
-
+    static void IRAM_ATTR _translate(const void *src,
+                                     rmt_item32_t *dest,
+                                     size_t src_size,
+                                     size_t wanted_num,
+                                     size_t *translated_size,
+                                     size_t *item_num,
+                                     const uint32_t rmtBit0,
+                                     const uint32_t rmtBit1,
+                                     const uint16_t rmtDurationReset);
 };
 
 class NeoEsp32RmtSpeedBase : public NeoEsp32RmtSpeed
@@ -114,16 +113,16 @@ public:
 class NeoEsp32RmtSpeedWs2811 : public NeoEsp32RmtSpeedBase
 {
 public:
-    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(300, 950); 
-    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(900, 350); 
+    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(300, 950);
+    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(900, 350);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(300000); // 300us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeedWs2812x : public NeoEsp32RmtSpeedBase
@@ -133,27 +132,27 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(300000); // 300us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeedSk6812 : public NeoEsp32RmtSpeedBase
 {
 public:
-    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(400, 850); 
-    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450); 
+    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(400, 850);
+    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(80000); // 80us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 // normal is inverted signal
@@ -164,12 +163,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(720, 530);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(200000); // 200us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 // normal is inverted signal
@@ -180,12 +179,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 400);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(200000); // 200us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 // normal is inverted signal
@@ -196,42 +195,42 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(720, 530);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(200000); // 200us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeed800Kbps : public NeoEsp32RmtSpeedBase
 {
 public:
-    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(400, 850); 
-    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450); 
+    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(400, 850);
+    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(50000); // 50us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeed400Kbps : public NeoEsp32RmtSpeedBase
 {
 public:
-    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(800, 1700); 
-    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(1600, 900); 
+    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(800, 1700);
+    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(1600, 900);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(50000); // 50us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeedApa106 : public NeoEsp32RmtSpeedBase
@@ -241,27 +240,27 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(1350, 350);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(50000); // 50us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeedTx1812 : public NeoEsp32RmtSpeedBase
 {
 public:
-    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(300, 600); 
-    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(600, 300); 
+    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(300, 600);
+    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(600, 300);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(80000); // 80us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtSpeedGs1903 : public NeoEsp32RmtSpeedBase
@@ -271,12 +270,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(900, 300);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(40000); // 40us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeedWs2811 : public NeoEsp32RmtInvertedSpeedBase
@@ -286,12 +285,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(900, 350);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(300000); // 300us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeedWs2812x : public NeoEsp32RmtInvertedSpeedBase
@@ -301,12 +300,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(300000); // 300us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeedSk6812 : public NeoEsp32RmtInvertedSpeedBase
@@ -316,12 +315,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(80000); // 80us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 // normal is inverted signal
@@ -332,12 +331,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(720, 530);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(200000); // 200us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 // normal is inverted signal
@@ -348,12 +347,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 400);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(200000); // 200us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 // normal is inverted signal
@@ -364,12 +363,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(720, 530);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(200000); // 200us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeed800Kbps : public NeoEsp32RmtInvertedSpeedBase
@@ -379,12 +378,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(800, 450);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(50000); // 50us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeed400Kbps : public NeoEsp32RmtInvertedSpeedBase
@@ -394,12 +393,12 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(1600, 900);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(50000); // 50us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeedApa106 : public NeoEsp32RmtInvertedSpeedBase
@@ -409,27 +408,27 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(1350, 350);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(50000); // 50us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeedTx1812 : public NeoEsp32RmtInvertedSpeedBase
 {
 public:
-    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(300, 600); 
-    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(600, 300); 
+    const static DRAM_ATTR uint32_t RmtBit0 = Item32Val(300, 600);
+    const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(600, 300);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(80000); // 80us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtInvertedSpeedGs1903 : public NeoEsp32RmtInvertedSpeedBase
@@ -439,18 +438,18 @@ public:
     const static DRAM_ATTR uint32_t RmtBit1 = Item32Val(900, 300);
     const static DRAM_ATTR uint16_t RmtDurationReset = FromNs(40000); // 40us
 
-    static void IRAM_ATTR Translate(const void* src,
-        rmt_item32_t* dest,
-        size_t src_size,
-        size_t wanted_num,
-        size_t* translated_size,
-        size_t* item_num);
+    static void IRAM_ATTR Translate(const void *src,
+                                    rmt_item32_t *dest,
+                                    size_t src_size,
+                                    size_t wanted_num,
+                                    size_t *translated_size,
+                                    size_t *item_num);
 };
 
 class NeoEsp32RmtChannel0
 {
 public:
-    NeoEsp32RmtChannel0() {};
+    NeoEsp32RmtChannel0(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_0;
 };
@@ -458,7 +457,7 @@ public:
 class NeoEsp32RmtChannel1
 {
 public:
-    NeoEsp32RmtChannel1() {};
+    NeoEsp32RmtChannel1(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_1;
 };
@@ -466,7 +465,7 @@ public:
 class NeoEsp32RmtChannel2
 {
 public:
-    NeoEsp32RmtChannel2() {};
+    NeoEsp32RmtChannel2(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_2;
 };
@@ -474,7 +473,7 @@ public:
 class NeoEsp32RmtChannel3
 {
 public:
-    NeoEsp32RmtChannel3() {};
+    NeoEsp32RmtChannel3(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_3;
 };
@@ -484,7 +483,7 @@ public:
 class NeoEsp32RmtChannel4
 {
 public:
-    NeoEsp32RmtChannel4() {};
+    NeoEsp32RmtChannel4(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_4;
 };
@@ -492,7 +491,7 @@ public:
 class NeoEsp32RmtChannel5
 {
 public:
-    NeoEsp32RmtChannel5() {};
+    NeoEsp32RmtChannel5(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_5;
 };
@@ -500,7 +499,7 @@ public:
 class NeoEsp32RmtChannel6
 {
 public:
-    NeoEsp32RmtChannel6() {};
+    NeoEsp32RmtChannel6(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_6;
 };
@@ -508,7 +507,7 @@ public:
 class NeoEsp32RmtChannel7
 {
 public:
-    NeoEsp32RmtChannel7() {};
+    NeoEsp32RmtChannel7(){};
 
     const static rmt_channel_t RmtChannelNumber = RMT_CHANNEL_7;
 };
@@ -519,8 +518,7 @@ public:
 class NeoEsp32RmtChannelN
 {
 public:
-    NeoEsp32RmtChannelN(NeoBusChannel channel) :
-        RmtChannelNumber(static_cast<rmt_channel_t>(channel))
+    NeoEsp32RmtChannelN(NeoBusChannel channel) : RmtChannelNumber(static_cast<rmt_channel_t>(channel))
     {
     }
     NeoEsp32RmtChannelN() = delete; // no default constructor
@@ -528,22 +526,21 @@ public:
     const rmt_channel_t RmtChannelNumber;
 };
 
-template<typename T_SPEED, typename T_CHANNEL> class NeoEsp32RmtMethodBase
+template <typename T_SPEED, typename T_CHANNEL>
+class NeoEsp32RmtMethodBase
 {
 public:
     typedef NeoNoSettings SettingsObject;
 
-    NeoEsp32RmtMethodBase(uint8_t pin, uint16_t pixelCount, size_t elementSize, size_t settingsSize)  :
-        _sizeData(pixelCount * elementSize + settingsSize),
-        _pin(pin)
+    NeoEsp32RmtMethodBase(uint8_t pin, uint16_t pixelCount, size_t elementSize, size_t settingsSize) : _sizeData(pixelCount * elementSize + settingsSize),
+                                                                                                       _pin(pin)
     {
         construct();
     }
 
-    NeoEsp32RmtMethodBase(uint8_t pin, uint16_t pixelCount, size_t elementSize, size_t settingsSize, NeoBusChannel channel) :
-        _sizeData(pixelCount* elementSize + settingsSize),
-        _pin(pin),
-        _channel(channel)
+    NeoEsp32RmtMethodBase(uint8_t pin, uint16_t pixelCount, size_t elementSize, size_t settingsSize, NeoBusChannel channel) : _sizeData(pixelCount * elementSize + settingsSize),
+                                                                                                                              _pin(pin),
+                                                                                                                              _channel(channel)
     {
         construct();
     }
@@ -563,7 +560,6 @@ public:
         free(_dataSending);
     }
 
-
     bool IsReadyToUpdate() const
     {
         return (ESP_OK == ESP_ERROR_CHECK_WITHOUT_ABORT(rmt_wait_tx_done(_channel.RmtChannelNumber, 0)));
@@ -578,7 +574,7 @@ public:
         config.gpio_num = static_cast<gpio_num_t>(_pin);
         config.mem_block_num = 1;
         config.tx_config.loop_en = false;
-        
+
         config.tx_config.idle_output_en = true;
         config.tx_config.idle_level = T_SPEED::IdleLevel;
 
@@ -621,7 +617,7 @@ public:
         return false;
     }
 
-    uint8_t* getData() const
+    uint8_t *getData() const
     {
         return _dataEditing;
     };
@@ -631,26 +627,25 @@ public:
         return _sizeData;
     }
 
-    void applySettings([[maybe_unused]] const SettingsObject& settings)
+    void applySettings([[maybe_unused]] const SettingsObject &settings)
     {
     }
 
 private:
-    const size_t  _sizeData;      // Size of '_data*' buffers 
-    const uint8_t _pin;            // output pin number
+    const size_t _sizeData;   // Size of '_data*' buffers
+    const uint8_t _pin;       // output pin number
     const T_CHANNEL _channel; // holds instance for multi channel support
 
     // Holds data stream which include LED color values and other settings as needed
-    uint8_t*  _dataEditing;   // exposed for get and set
-    uint8_t*  _dataSending;   // used for async send using RMT
-
+    uint8_t *_dataEditing; // exposed for get and set
+    uint8_t *_dataSending; // used for async send using RMT
 
     void construct()
     {
-        _dataEditing = static_cast<uint8_t*>(malloc(_sizeData));
+        _dataEditing = static_cast<uint8_t *>(malloc(_sizeData));
         // data cleared later in Begin()
 
-        _dataSending = static_cast<uint8_t*>(malloc(_sizeData));
+        _dataSending = static_cast<uint8_t *>(malloc(_sizeData));
         // no need to initialize it, it gets overwritten on every send
     }
 };
@@ -700,7 +695,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel1> NeoE
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2811, NeoEsp32RmtChannel2> NeoEsp32Rmt2Ws2811Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel2> NeoEsp32Rmt2Ws2812xMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel2> NeoEsp32Rmt2Ws2816Method;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel2>  NeoEsp32Rmt2Sk6812Method;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel2> NeoEsp32Rmt2Sk6812Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1814, NeoEsp32RmtChannel2> NeoEsp32Rmt2Tm1814Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1829, NeoEsp32RmtChannel2> NeoEsp32Rmt2Tm1829Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1914, NeoEsp32RmtChannel2> NeoEsp32Rmt2Tm1914Method;
@@ -713,7 +708,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel2> NeoE
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2811, NeoEsp32RmtChannel3> NeoEsp32Rmt3Ws2811Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel3> NeoEsp32Rmt3Ws2812xMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel3> NeoEsp32Rmt3Ws2816Method;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel3>  NeoEsp32Rmt3Sk6812Method;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel3> NeoEsp32Rmt3Sk6812Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1814, NeoEsp32RmtChannel3> NeoEsp32Rmt3Tm1814Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1829, NeoEsp32RmtChannel3> NeoEsp32Rmt3Tm1829Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1914, NeoEsp32RmtChannel3> NeoEsp32Rmt3Tm1914Method;
@@ -723,12 +718,12 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedGs1903, NeoEsp32RmtChannel3> NeoEs
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed800Kbps, NeoEsp32RmtChannel3> NeoEsp32Rmt3800KbpsMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel3> NeoEsp32Rmt3400KbpsMethod;
 
-#if !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3) 
+#if !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3)
 
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2811, NeoEsp32RmtChannel4> NeoEsp32Rmt4Ws2811Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel4> NeoEsp32Rmt4Ws2812xMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel4> NeoEsp32Rmt4Ws2816Method;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel4>  NeoEsp32Rmt4Sk6812Method;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel4> NeoEsp32Rmt4Sk6812Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1814, NeoEsp32RmtChannel4> NeoEsp32Rmt4Tm1814Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1829, NeoEsp32RmtChannel4> NeoEsp32Rmt4Tm1829Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1914, NeoEsp32RmtChannel4> NeoEsp32Rmt4Tm1914Method;
@@ -741,7 +736,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel4> NeoE
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2811, NeoEsp32RmtChannel5> NeoEsp32Rmt5Ws2811Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel5> NeoEsp32Rmt5Ws2812xMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel5> NeoEsp32Rmt5Ws2816Method;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel5>  NeoEsp32Rmt5Sk6812Method;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel5> NeoEsp32Rmt5Sk6812Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1814, NeoEsp32RmtChannel5> NeoEsp32Rmt5Tm1814Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1829, NeoEsp32RmtChannel5> NeoEsp32Rmt5Tm1829Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1914, NeoEsp32RmtChannel5> NeoEsp32Rmt5Tm1914Method;
@@ -754,7 +749,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel5> NeoE
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2811, NeoEsp32RmtChannel6> NeoEsp32Rmt6Ws2811Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel6> NeoEsp32Rmt6Ws2812xMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel6> NeoEsp32Rmt6Ws2816Method;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel6>  NeoEsp32Rmt6Sk6812Method;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel6> NeoEsp32Rmt6Sk6812Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1814, NeoEsp32RmtChannel6> NeoEsp32Rmt6Tm1814Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1829, NeoEsp32RmtChannel6> NeoEsp32Rmt6Tm1829Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1914, NeoEsp32RmtChannel6> NeoEsp32Rmt6Tm1914Method;
@@ -767,7 +762,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel6> NeoE
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2811, NeoEsp32RmtChannel7> NeoEsp32Rmt7Ws2811Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel7> NeoEsp32Rmt7Ws2812xMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedWs2812x, NeoEsp32RmtChannel7> NeoEsp32Rmt7Ws2816Method;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel7>  NeoEsp32Rmt7Sk6812Method;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedSk6812, NeoEsp32RmtChannel7> NeoEsp32Rmt7Sk6812Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1814, NeoEsp32RmtChannel7> NeoEsp32Rmt7Tm1814Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1829, NeoEsp32RmtChannel7> NeoEsp32Rmt7Tm1829Method;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedTm1914, NeoEsp32RmtChannel7> NeoEsp32Rmt7Tm1914Method;
@@ -777,7 +772,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeedGs1903, NeoEsp32RmtChannel7> NeoEs
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed800Kbps, NeoEsp32RmtChannel7> NeoEsp32Rmt7800KbpsMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtSpeed400Kbps, NeoEsp32RmtChannel7> NeoEsp32Rmt7400KbpsMethod;
 
-#endif // !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3) 
+#endif // !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3)
 #endif // !defined(CONFIG_IDF_TARGET_ESP32C3)
 
 // inverted
@@ -825,7 +820,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChanne
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2811, NeoEsp32RmtChannel2> NeoEsp32Rmt2Ws2811InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel2> NeoEsp32Rmt2Ws2812xInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel2> NeoEsp32Rmt2Ws2816InvertedMethod;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel2>  NeoEsp32Rmt2Sk6812InvertedMethod;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel2> NeoEsp32Rmt2Sk6812InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1814, NeoEsp32RmtChannel2> NeoEsp32Rmt2Tm1814InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1829, NeoEsp32RmtChannel2> NeoEsp32Rmt2Tm1829InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1914, NeoEsp32RmtChannel2> NeoEsp32Rmt2Tm1914InvertedMethod;
@@ -838,7 +833,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChanne
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2811, NeoEsp32RmtChannel3> NeoEsp32Rmt3Ws2811InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel3> NeoEsp32Rmt3Ws2812xInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel3> NeoEsp32Rmt3Ws2816InvertedMethod;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel3>  NeoEsp32Rmt3Sk6812InvertedMethod;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel3> NeoEsp32Rmt3Sk6812InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1814, NeoEsp32RmtChannel3> NeoEsp32Rmt3Tm1814InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1829, NeoEsp32RmtChannel3> NeoEsp32Rmt3Tm1829InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1914, NeoEsp32RmtChannel3> NeoEsp32Rmt3Tm1914InvertedMethod;
@@ -853,7 +848,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChanne
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2811, NeoEsp32RmtChannel4> NeoEsp32Rmt4Ws2811InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel4> NeoEsp32Rmt4Ws2812xInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel4> NeoEsp32Rmt4Ws2816InvertedMethod;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel4>  NeoEsp32Rmt4Sk6812InvertedMethod;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel4> NeoEsp32Rmt4Sk6812InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1814, NeoEsp32RmtChannel4> NeoEsp32Rmt4Tm1814InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1829, NeoEsp32RmtChannel4> NeoEsp32Rmt4Tm1829InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1914, NeoEsp32RmtChannel4> NeoEsp32Rmt4Tm1914InvertedMethod;
@@ -866,7 +861,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChanne
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2811, NeoEsp32RmtChannel5> NeoEsp32Rmt5Ws2811InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel5> NeoEsp32Rmt5Ws2812xInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel5> NeoEsp32Rmt5Ws2816InvertedMethod;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel5>  NeoEsp32Rmt5Sk6812InvertedMethod;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel5> NeoEsp32Rmt5Sk6812InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1814, NeoEsp32RmtChannel5> NeoEsp32Rmt5Tm1814InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1829, NeoEsp32RmtChannel5> NeoEsp32Rmt5Tm1829InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1914, NeoEsp32RmtChannel5> NeoEsp32Rmt5Tm1914InvertedMethod;
@@ -879,7 +874,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChanne
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2811, NeoEsp32RmtChannel6> NeoEsp32Rmt6Ws2811InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel6> NeoEsp32Rmt6Ws2812xInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel6> NeoEsp32Rmt6Ws2816InvertedMethod;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel6>  NeoEsp32Rmt6Sk6812InvertedMethod;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel6> NeoEsp32Rmt6Sk6812InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1814, NeoEsp32RmtChannel6> NeoEsp32Rmt6Tm1814InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1829, NeoEsp32RmtChannel6> NeoEsp32Rmt6Tm1829InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1914, NeoEsp32RmtChannel6> NeoEsp32Rmt6Tm1914InvertedMethod;
@@ -892,7 +887,7 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChanne
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2811, NeoEsp32RmtChannel7> NeoEsp32Rmt7Ws2811InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel7> NeoEsp32Rmt7Ws2812xInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedWs2812x, NeoEsp32RmtChannel7> NeoEsp32Rmt7Ws2816InvertedMethod;
-typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel7>  NeoEsp32Rmt7Sk6812InvertedMethod;
+typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedSk6812, NeoEsp32RmtChannel7> NeoEsp32Rmt7Sk6812InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1814, NeoEsp32RmtChannel7> NeoEsp32Rmt7Tm1814InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1829, NeoEsp32RmtChannel7> NeoEsp32Rmt7Tm1829InvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedTm1914, NeoEsp32RmtChannel7> NeoEsp32Rmt7Tm1914InvertedMethod;
@@ -902,13 +897,12 @@ typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeedGs1903, NeoEsp32RmtChannel
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed800Kbps, NeoEsp32RmtChannel7> NeoEsp32Rmt7800KbpsInvertedMethod;
 typedef NeoEsp32RmtMethodBase<NeoEsp32RmtInvertedSpeed400Kbps, NeoEsp32RmtChannel7> NeoEsp32Rmt7400KbpsInvertedMethod;
 
-#endif // !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3) 
+#endif // !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32S3)
 #endif // !defined(CONFIG_IDF_TARGET_ESP32C3)
-
 
 #if defined(NEOPIXEL_ESP32_RMT_DEFAULT) || defined(CONFIG_IDF_TARGET_ESP32S2) || defined(CONFIG_IDF_TARGET_ESP32C3) || defined(CONFIG_IDF_TARGET_ESP32S3)
 
-// Normally I2s method is the default, defining NEOPIXEL_ESP32_RMT_DEFAULT 
+// Normally I2s method is the default, defining NEOPIXEL_ESP32_RMT_DEFAULT
 // will switch to use RMT as the default method
 // The ESP32S2, ESP32S3, and ESP32C3 will always defualt to RMT
 
